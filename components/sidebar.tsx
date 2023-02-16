@@ -78,7 +78,7 @@ const PROJECTS = [
 
 export const Sidebar = () => {
   return (
-    <aside className="h-full basis-64 pt-6">
+    <aside className="h-full shrink-0 basis-64 pt-6">
       <div className="flex h-full flex-col">
         <LogoAndMenu />
         <NavItems />
@@ -91,7 +91,7 @@ export const Sidebar = () => {
 
 const Collections = () => {
   return (
-    <div className="mt-4 grow divide-y divide-white divide-opacity-5 overflow-y-auto border border-white border-opacity-5">
+    <div className="scrollbar-hide mt-4 grow divide-y divide-white  divide-opacity-5 overflow-y-auto border border-white border-opacity-5">
       <Collection name="Projects" />
       <Collection name="Favorites" />
       <Collection name="Channels" />

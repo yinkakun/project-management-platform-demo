@@ -12,7 +12,7 @@ export const Layout = ({ children }: LayoutProps) => {
       <Sidebar />
       <div className="flex grow flex-col">
         <Header />
-        <main className="grow border-l border-white border-opacity-10 bg-[#1F2125]">
+        <main className="scrollbar-hide grow overflow-y-auto border-l border-white border-opacity-10 bg-[#1F2125]">
           {children}
         </main>
       </div>

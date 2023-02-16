@@ -11,7 +11,7 @@ const NAMES = [
 
 export const Avatars = () => {
   return (
-    <div className="group: flex items-center">
+    <div className="flex items-center">
       {NAMES.map((name) => {
         return (
           <div key={name} className="-ml-2 group-first:ml-0">

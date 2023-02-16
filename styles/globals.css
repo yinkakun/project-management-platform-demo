@@ -1,6 +1,16 @@
 html,
 body,
 #__next {
-  @apply min-h-screen font-sans text-slate-800;
+  @apply h-screen font-sans text-slate-800;
   scroll-behavior: initial;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* For IE, Edge and Firefox */
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }
