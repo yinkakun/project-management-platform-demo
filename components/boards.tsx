@@ -1,15 +1,18 @@
 import React from 'react';
-import { DndContext } from '@dnd-kit/core';
+import { DndContext, rectIntersection, DragEndEvent } from '@dnd-kit/core';
 import { TaskList } from '@/components/task-list';
 
+export type Category = 'QA' | 'UI/UX' | 'development' | 'marketing' | 'design';
+
+export type Status = 'backlog' | 'todo' | 'doing' | 'review' | 'done';
 export interface ITask {
   id: number;
   title: string;
   date: string;
   members: string[];
   estimate: number;
-  category: Array<'QA' | 'UI/UX' | 'Development' | 'Marketing' | 'Design'>;
-  status: 'backlog' | 'todo' | 'doing' | 'review' | 'done';
+  category: Array<Category>;
+  status: Status;
 }
 
 const TASKS: ITask[] = [
@@ -19,7 +22,7 @@ const TASKS: ITask[] = [
     date: '3 June',
     members: ['Will Wheaton', 'Diane Keaton'],
     estimate: 1,
-    category: ['Development', 'UI/UX'],
+    category: ['development', 'UI/UX'],
     status: 'backlog',
   },
   {
@@ -28,7 +31,7 @@ const TASKS: ITask[] = [
     date: '10 March',
     members: ['Cindy Crawford', 'David Beckham', 'Gigi Hadid'],
     estimate: 2,
-    category: ['Design'],
+    category: ['design'],
     status: 'done',
   },
   {
@@ -37,7 +40,7 @@ const TASKS: ITask[] = [
     date: '22 April',
     members: ['Kim Kardashian', 'Ryan Reynolds'],
     estimate: 3,
-    category: ['Marketing', 'Design'],
+    category: ['marketing', 'design'],
     status: 'done',
   },
   {
@@ -46,7 +49,7 @@ const TASKS: ITask[] = [
     date: '15 May',
     members: ['Tom Cruise', 'Meryl Streep'],
     estimate: 4,
-    category: ['Development', 'UI/UX'],
+    category: ['development', 'UI/UX'],
     status: 'done',
   },
   {
@@ -55,7 +58,7 @@ const TASKS: ITask[] = [
     date: '1 July',
     members: ['Jessica Alba', 'Ibrahimovic'],
     estimate: 1,
-    category: ['UI/UX', 'Marketing'],
+    category: ['UI/UX', 'marketing'],
     status: 'doing',
   },
   {
@@ -73,7 +76,7 @@ const TASKS: ITask[] = [
     date: '21 September',
     members: ['Liam Neeson', 'Oprah Winfrey'],
     estimate: 1,
-    category: ['Development', 'Marketing'],
+    category: ['development', 'marketing'],
     status: 'todo',
   },
   {
@@ -82,7 +85,7 @@ const TASKS: ITask[] = [
     date: '7 November',
     members: ['Jennifer Aniston', 'Hugh Jackman'],
     estimate: 3,
-    category: ['Design'],
+    category: ['design'],
     status: 'backlog',
   },
   {
@@ -91,7 +94,7 @@ const TASKS: ITask[] = [
     date: '12 December',
     members: ['Daniel Radcliffe', 'Saoirse Ronan'],
     estimate: 4,
-    category: ['QA', 'Marketing'],
+    category: ['QA', 'marketing'],
     status: 'backlog',
   },
   {
@@ -100,7 +103,7 @@ const TASKS: ITask[] = [
     date: '17 January',
     members: ['Emma Watson', 'Zac Efron'],
     estimate: 6,
-    category: ['Design'],
+    category: ['design'],
     status: 'review',
   },
   {
@@ -109,7 +112,7 @@ const TASKS: ITask[] = [
     date: '28 February',
     members: ['Gordon Ramsay', 'Padma Lakshmi'],
     estimate: 2,
-    category: ['Marketing', 'QA'],
+    category: ['marketing', 'QA'],
     status: 'done',
   },
   {
@@ -118,7 +121,7 @@ const TASKS: ITask[] = [
     date: 'March 15',
     members: ['John Smith', 'Jane Doe'],
     estimate: 3,
-    category: ['QA', 'Development'],
+    category: ['QA', 'development'],
     status: 'todo',
   },
   {
@@ -127,7 +130,7 @@ const TASKS: ITask[] = [
     date: 'April 1',
     members: ['Sarah Lee', 'David Kim'],
     estimate: 5,
-    category: ['UI/UX', 'Development'],
+    category: ['UI/UX', 'development'],
     status: 'doing',
   },
 
@@ -137,7 +140,7 @@ const TASKS: ITask[] = [
     date: 'May 10',
     members: ['Tom Jones', 'Samantha Brown'],
     estimate: 2,
-    category: ['Marketing'],
+    category: ['marketing'],
     status: 'todo',
   },
   {
@@ -146,7 +149,7 @@ const TASKS: ITask[] = [
     date: 'June 1',
     members: ['Michael Chang', 'Lisa Park'],
     estimate: 7,
-    category: ['Development'],
+    category: ['development'],
     status: 'doing',
   },
   {
@@ -155,7 +158,7 @@ const TASKS: ITask[] = [
     date: 'July 1',
     members: ['Jessica Lee', 'Brian Kim'],
     estimate: 2,
-    category: ['Marketing'],
+    category: ['marketing'],
     status: 'todo',
   },
   {
@@ -164,7 +167,7 @@ const TASKS: ITask[] = [
     date: 'August 15',
     members: ['David Park', 'Karen Lee'],
     estimate: 4,
-    category: ['Development'],
+    category: ['development'],
     status: 'doing',
   },
   {
@@ -173,7 +176,7 @@ const TASKS: ITask[] = [
     date: 'September 1',
     members: ['Kim Lee', 'Jake Kim'],
     estimate: 3,
-    category: ['UI/UX', 'Development'],
+    category: ['UI/UX', 'development'],
     status: 'doing',
   },
   {
@@ -182,7 +185,7 @@ const TASKS: ITask[] = [
     date: 'October 1',
     members: ['Steve Lee', 'Sophia Kim'],
     estimate: 5,
-    category: ['QA', 'Development'],
+    category: ['QA', 'development'],
     status: 'todo',
   },
   {
@@ -191,7 +194,7 @@ const TASKS: ITask[] = [
     date: 'November 15',
     members: ['Sung Lee', 'Daniel Kim'],
     estimate: 6,
-    category: ['Development'],
+    category: ['development'],
     status: 'doing',
   },
   {
@@ -200,7 +203,7 @@ const TASKS: ITask[] = [
     date: 'December 1',
     members: ['Jenny Lee', 'Peter Kim'],
     estimate: 2,
-    category: ['UI/UX', 'Marketing'],
+    category: ['UI/UX', 'marketing'],
     status: 'todo',
   },
 ];
@@ -214,15 +217,35 @@ export const Boards = () => {
   const backlog = tasks.filter((task) => task.status === 'backlog');
   const inProgress = tasks.filter((task) => task.status === 'doing');
 
+  const handleDragEnd = (event: DragEndEvent) => {
+    const { active, over } = event;
+    if (!over || active.id === over.id) {
+      return;
+    }
+
+    const status = over.data.current?.status;
+    const activeTask = active.data.current?.task;
+
+    if (status && activeTask) {
+      const newTasks = tasks.map((task) => {
+        if (task.id === activeTask.id) {
+          task.status = status;
+        }
+        return task;
+      });
+      setTasks(newTasks);
+    }
+  };
+
   return (
-    <DndContext>
+    <DndContext collisionDetection={rectIntersection} onDragEnd={handleDragEnd}>
       <div className="scrollbar-hide h-full w-full overflow-x-auto">
         <div className="flex h-full w-full gap-4">
-          <TaskList title="Backlog" tasks={backlog} />
-          <TaskList title="To Do" tasks={todo} />
-          <TaskList title="In Progress" tasks={inProgress} />
-          <TaskList title="Review" tasks={review} />
-          <TaskList title="Done" tasks={done} />
+          <TaskList title="Backlog" tasks={backlog} id="backlog" />
+          <TaskList title="To Do" tasks={todo} id="todo" />
+          <TaskList title="In Progress" tasks={inProgress} id="doing" />
+          <TaskList title="Review" tasks={review} id="review" />
+          <TaskList title="Done" tasks={done} id="done" />
         </div>
       </div>
     </DndContext>
