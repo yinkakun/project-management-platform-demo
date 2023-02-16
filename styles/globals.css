@@ -1,0 +1,6 @@
+html,
+body,
+#__next {
+  @apply min-h-screen font-sans text-slate-800;
+  scroll-behavior: initial;
+}
