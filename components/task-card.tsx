@@ -78,6 +78,13 @@ export const Task = ({ task }: TaskProps) => {
           <span className="text-[10px] text-opacity-80">00: 00</span>
         </div>
       </div>
+
+      <div className="flex items-center gap-4">
+        <div className="w-full grow rounded-full border border-white border-opacity-20" />
+        <span className="whitespace-nowrap text-[10px] text-white text-opacity-60">
+          Est: {task.estimate} {task.estimate === 1 ? 'hour' : 'hours'}
+        </span>
+      </div>
     </div>
   );
 };
