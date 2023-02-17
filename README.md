@@ -1,6 +1,4 @@
-# UsePay
-
-Just another nigerian fintech app.
+Hello World
 
 ## Features
 
