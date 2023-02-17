@@ -1,6 +1,13 @@
 import React from 'react';
-import { DndContext, rectIntersection, DragEndEvent } from '@dnd-kit/core';
+import {
+  DndContext,
+  rectIntersection,
+  DragEndEvent,
+  DragStartEvent,
+  DragOverlay,
+} from '@dnd-kit/core';
 import { TaskList } from '@/components/task-list';
+import { Task } from './task-card';
 
 export type Category = 'QA' | 'UI/UX' | 'development' | 'marketing' | 'design';
 
@@ -210,12 +217,19 @@ const TASKS: ITask[] = [
 
 export const Boards = () => {
   const [tasks, setTasks] = React.useState(TASKS);
+  const [activeTask, setActiveTask] = React.useState<ITask | null>(null);
 
   const done = tasks.filter((task) => task.status === 'done');
   const todo = tasks.filter((task) => task.status === 'todo');
   const review = tasks.filter((task) => task.status === 'review');
   const backlog = tasks.filter((task) => task.status === 'backlog');
   const inProgress = tasks.filter((task) => task.status === 'doing');
+
+  const handleDragStart = (event: DragStartEvent) => {
+    const { active } = event;
+    const activeTask = active.data.current?.task;
+    setActiveTask(activeTask);
+  };
 
   const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event;
@@ -235,10 +249,16 @@ export const Boards = () => {
       });
       setTasks(newTasks);
     }
+
+    setActiveTask(null);
   };
 
   return (
-    <DndContext collisionDetection={rectIntersection} onDragEnd={handleDragEnd}>
+    <DndContext
+      onDragEnd={handleDragEnd}
+      onDragStart={handleDragStart}
+      collisionDetection={rectIntersection}
+    >
       <div className="scrollbar-hide h-full w-full overflow-x-auto">
         <div className="flex h-full w-full gap-4">
           <TaskList title="Backlog" tasks={backlog} id="backlog" />
@@ -248,6 +268,15 @@ export const Boards = () => {
           <TaskList title="Done" tasks={done} id="done" />
         </div>
       </div>
+
+      <DragOverlay
+        dropAnimation={{
+          duration: 500,
+          easing: 'cubic-bezier(0.18, 0.67, 0.6, 1.22)',
+        }}
+      >
+        {activeTask ? <Task task={activeTask} /> : null}
+      </DragOverlay>
     </DndContext>
   );
 };

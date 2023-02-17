@@ -1,4 +1,3 @@
-import { useDraggable } from '@dnd-kit/core';
 import { ITask } from '@/components/boards';
 import Avvvatars from 'avvvatars-react';
 import { BiPlay } from 'react-icons/bi';
@@ -16,31 +15,8 @@ const categoryToColor: Record<Category, string> = {
 };
 
 export const Task = ({ task }: TaskProps) => {
-  const { title, id } = task;
-  const { attributes, listeners, setNodeRef, transform, isDragging } =
-    useDraggable({
-      id,
-      data: {
-        task,
-      },
-    });
-
-  const style = transform
-    ? {
-        transform: `translate3d(${transform.x}px, ${transform.y}px, 0) rotate(2deg)`,
-      }
-    : undefined;
-
   return (
-    <div
-      className={`flex flex-col gap-4 rounded-md border border-white border-opacity-10 bg-[#27292D] p-3 duration-100 ease-linear ${
-        isDragging ? 'z-50 shadow-xl' : ''
-      }`}
-      ref={setNodeRef}
-      style={style}
-      {...listeners}
-      {...attributes}
-    >
+    <div className="flex select-none flex-col gap-4 rounded-md border border-white border-opacity-10 bg-[#27292D] p-3">
       <div className="flex items-center justify-between gap-2">
         <div className="flex flex-wrap gap-1">
           {task.category.map((category) => {
@@ -60,7 +36,7 @@ export const Task = ({ task }: TaskProps) => {
         <span className="whitespace-nowrap text-[10px]">{task.date}</span>
       </div>
 
-      <div className="text-sm font-medium">{title}</div>
+      <div className="text-sm font-medium">{task.title}</div>
       <div className="flex items-center justify-between gap-2">
         <div className="ml-4 flex gap-2">
           {task.members.map((member) => {
